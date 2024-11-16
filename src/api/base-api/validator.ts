@@ -1,26 +1,5 @@
 import { z } from "zod";
-
-/**
- * Configuration object for schema validation.
- *
- * @template T Type of the Zod schema.
- */
-interface ValidateConfig<T extends z.ZodTypeAny> {
-  /**
-   * The data to be validated.
-   */
-  dataTransferObject: unknown;
-
-  /**
-   * The Zod schema defining the expected data structure.
-   */
-  schema: T;
-
-  /**
-   * The name of the schema, used for logging and error tracking.
-   */
-  schemaName: string;
-}
+import type { ValidateConfig } from "./types";
 
 /**
  * Validates data against a Zod schema.

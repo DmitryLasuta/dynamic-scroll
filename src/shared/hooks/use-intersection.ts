@@ -14,11 +14,11 @@ export const useIntersection = (onIntersect: () => void) => {
 
       if (element) {
         observer.observe(element);
-        unsubscribe.current = () => observer.unobserve;
+        unsubscribe.current = () => observer.disconnect();
       } else {
         unsubscribe.current();
       }
     },
-    [onIntersect]
+    []
   );
 };

@@ -8,6 +8,7 @@ export function PostsList() {
     isLoading: postListIsLoading,
     isSuccess: postListHasLoadedSuccessfully,
     fetchNextPage: fetchNextPagePostList,
+    isFetchingNextPage: nextPostListPageIsFetching,
   } = useGetPostList();
 
   const cursorRef = useIntersection(() => fetchNextPagePostList());
@@ -23,6 +24,7 @@ export function PostsList() {
           ))}
         </ul>
       )}
+      {nextPostListPageIsFetching && <p>Loading...</p>}
       <div ref={cursorRef}></div>
     </>
   );

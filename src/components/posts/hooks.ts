@@ -1,6 +1,5 @@
-import { type Post, postsApi } from '@/api/posts';
-import { useQuery } from '@tanstack/react-query';
-import type { QueryOptions } from '@/shared/types';
+import { postsApi } from '@/api/posts';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 /**
  * Hook for fetching a list of posts.
@@ -8,10 +7,12 @@ import type { QueryOptions } from '@/shared/types';
  * @param options - Optional query options.
  * @returns The list of posts.
  */
-export const useGetPostList = (options?: QueryOptions<Post[]>) => {
-  return useQuery({
+export const useGetPostList = () => {
+  return useInfiniteQuery({
     queryKey: ['posts', 'list'],
-    queryFn: ({ signal }) => postsApi.getPosts({ signal }),
-    ...options,
+    queryFn: ({ signal, pageParam }) => postsApi.getPosts({ page: pageParam }, { signal }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => (lastPage.length ? allPages.length + 1 : undefined),
+    select: ({ pages }) => pages.flatMap(page => page),
   });
 };

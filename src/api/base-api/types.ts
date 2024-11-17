@@ -43,3 +43,10 @@ export interface FetcherParams<T extends z.ZodTypeAny> {
    */
   schemaName: string;
 }
+
+export type Meta = {
+  /**
+   * An AbortSignal used to cancel the request.
+   */
+  signal: AbortSignal;
+};

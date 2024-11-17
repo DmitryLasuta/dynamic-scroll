@@ -1,5 +1,6 @@
-import { API } from '@/api';
+import { API, type Meta } from '@/api';
 import { Post, PostSchema, PostsSchema } from './schema';
+import { PostPostListParams } from './types';
 
 /**
  * Class representing the Posts API.
@@ -18,6 +19,8 @@ class PostsApi extends API {
     details: (id: number) => `/posts/${id}`,
   };
 
+  private MAX_POSTS_PER_PAGE = 10;
+
   constructor() {
     super('https://jsonplaceholder.typicode.com');
   }
@@ -25,12 +28,14 @@ class PostsApi extends API {
   /**
    * Fetches a list of posts.
    *
-   * @param signal An AbortSignal used to cancel the request.
    * @returns A promise that resolves to an array of Post objects.
    */
-  public getPosts({ signal }: { signal: AbortSignal }): Promise<Post[]> {
+  public getPosts(
+    { page, limit = this.MAX_POSTS_PER_PAGE }: PostPostListParams,
+    { signal }: Meta
+  ): Promise<Post[]> {
     return this.fetcher({
-      endpoint: this.endpoints.default,
+      endpoint: `${this.endpoints.default}?_page=${page}&_limit=${limit}`,
       schema: PostsSchema,
       schemaName: 'PostsSchema',
       options: {
@@ -41,11 +46,11 @@ class PostsApi extends API {
 
   /**
    * Fetches details for a specific post by its ID.
+   *
    * @param id The ID of the post to fetch details for.
-   * @param signal An AbortSignal used to cancel the request.
    * @returns A promise that resolves to a Post object.
    */
-  public async getPostDetails(id: number, { signal }: { signal: AbortSignal }): Promise<Post> {
+  public async getPostDetails(id: number, { signal }: Meta): Promise<Post> {
     return this.fetcher({
       endpoint: this.endpoints.details(id),
       schema: PostSchema,

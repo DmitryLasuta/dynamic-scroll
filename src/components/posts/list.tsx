@@ -1,8 +1,16 @@
+import { useIntersection } from '@/shared/hooks';
 import { PostCard } from './card';
 import { useGetPostList } from './hooks';
 
 export function PostsList() {
-  const { data: postList, isLoading: postListIsLoading, isSuccess: postListHasLoadedSuccessfully } = useGetPostList();
+  const {
+    data: postList,
+    isLoading: postListIsLoading,
+    isSuccess: postListHasLoadedSuccessfully,
+    fetchNextPage: fetchNextPagePostList,
+  } = useGetPostList();
+
+  const cursorRef = useIntersection(() => fetchNextPagePostList());
   return (
     <>
       {postListIsLoading && <p>Loading...</p>}
@@ -15,6 +23,7 @@ export function PostsList() {
           ))}
         </ul>
       )}
+      <div ref={cursorRef}></div>
     </>
   );
 }

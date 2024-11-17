@@ -1,6 +1,7 @@
 import { API, type Meta } from '@/api';
 import { Post, PostSchema, PostsSchema } from './schema';
 import { PostPostListParams } from './types';
+import { infiniteQueryOptions } from '@tanstack/react-query';
 
 /**
  * Class representing the Posts API.
@@ -41,6 +42,23 @@ class PostsApi extends API {
       options: {
         signal,
       },
+    });
+  }
+
+  /**
+   * Gets the query options for infinite fetching of posts.
+   * It uses the `infiniteQueryOptions` function from the `@tanstack/react-query` library.
+   * 
+   * @returns the query options for infinite fetching of posts.
+   */
+
+  public getPostsQueryOptions() {
+    return infiniteQueryOptions({
+      queryKey: ['posts', 'list'],
+      queryFn: ({ signal, pageParam }) => postsApi.getPosts({ page: pageParam }, { signal }),
+      initialPageParam: 1,
+      getNextPageParam: (lastPage, allPages) => (lastPage.length ? allPages.length + 1 : undefined),
+      select: ({ pages }) => pages.flatMap(page => page),
     });
   }
 

@@ -3,7 +3,7 @@ import { Post, PostSchema, PostsSchema } from './schema';
 
 /**
  * Class representing the Posts API.
- * 
+ *
  * Includes methods for fetching posts and post details.
  */
 class PostsApi extends API {
@@ -24,27 +24,35 @@ class PostsApi extends API {
 
   /**
    * Fetches a list of posts.
-   * 
+   *
+   * @param signal An AbortSignal used to cancel the request.
    * @returns A promise that resolves to an array of Post objects.
    */
-  public async getPosts(): Promise<Post[]> {
+  public getPosts({ signal }: { signal: AbortSignal }): Promise<Post[]> {
     return this.fetcher({
       endpoint: this.endpoints.default,
       schema: PostsSchema,
       schemaName: 'PostsSchema',
+      options: {
+        signal,
+      },
     });
   }
 
   /**
    * Fetches details for a specific post by its ID.
    * @param id The ID of the post to fetch details for.
+   * @param signal An AbortSignal used to cancel the request.
    * @returns A promise that resolves to a Post object.
    */
-  public async getPostDetails(id: number): Promise<Post> {
+  public async getPostDetails(id: number, { signal }: { signal: AbortSignal }): Promise<Post> {
     return this.fetcher({
       endpoint: this.endpoints.details(id),
       schema: PostSchema,
       schemaName: 'PostSchema',
+      options: {
+        signal: signal,
+      },
     });
   }
 }
